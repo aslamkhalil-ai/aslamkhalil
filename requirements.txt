@@ -1,0 +1,9 @@
+
+Flask>=3.0,<4.0
+requests>=2.31,<3.0
+python-dotenv>=1.0,<2.0
+
+Pillow>=10.0,<13.0
+faster-whisper>=1.2,<2.0
+av==16.1.0
+piper-tts>=1.2,<2.0
