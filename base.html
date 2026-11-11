@@ -1,0 +1,148 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="theme-color" content="#080b14">
+    <meta name="description" content="CineForge AI - Intelligent AI-powered video production studio.">
+
+    <title>{% block title %}CineForge AI{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+
+<body>
+
+<div class="shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <a class="brand" href="{{ url_for('dashboard') }}">
+            <span class="brand-mark">C</span>
+
+            <span class="brand-name">
+                CineForge
+                <small>AI PRODUCTION STUDIO</small>
+            </span>
+        </a>
+
+        <div class="side-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+
+            <a class="nav-link {% if active == 'dashboard' %}active{% endif %}"
+               href="{{ url_for('dashboard') }}">
+
+                <span class="nav-icon">▦</span>
+                <span>Project Library</span>
+            </a>
+
+            <a class="nav-link {% if active == 'new' %}active{% endif %}"
+               href="{{ url_for('new_project') }}">
+
+                <span class="nav-icon">＋</span>
+                <span>Create Project</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-card">
+                <span class="pulse"></span>
+
+                <div>
+                    <b>System Operational</b>
+                    <small>Local AI environment</small>
+                </div>
+            </div>
+
+            <div class="side-foot">
+                <span>CineForge AI</span>
+                <span>v1.0</span>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- Main Application -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-heading">
+                <span class="eyebrow">AI VIDEO PRODUCTION</span>
+
+                <div class="top-title">
+                    {% block page_heading %}Creative Workspace{% endblock %}
+                </div>
+            </div>
+
+            <div class="top-right">
+
+                <span class="local-pill">
+                    <i></i>
+                    LOCAL ENVIRONMENT
+                </span>
+
+                <div class="avatar" title="CineForge AI Studio">
+                    CF
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <!-- Flash Notifications -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div class="flash-container">
+
+                        {% for category, message in messages %}
+
+                            <div class="alert {{ category }}" role="status">
+                                <span class="alert-indicator"></span>
+                                <span>{{ message }}</span>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+
+        </section>
+
+        <footer class="app-footer">
+            <span>CineForge AI</span>
+            <span>Intelligent Video Production</span>
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

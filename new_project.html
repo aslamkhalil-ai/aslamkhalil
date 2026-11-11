@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Create project · CineForge AI{% endblock %}
+{% block content %}
+<div class="eyebrow">NEW PRODUCTION</div><h1>Create a project</h1><p class="muted">Start with an idea. CineForge will turn it into a structured script and scene plan.</p>
+<form class="form-panel" method="post">
+  <label>Project title<input name="title" required maxlength="100" placeholder="e.g. The Last Signal"></label>
+  <label>Creative idea<textarea name="idea" required rows="5" placeholder="Describe the story, game, product or creative brief..."></textarea></label>
+  <div class="form-grid">
+    <label>Content genre<select name="genre"><option>Horror</option><option>Mystery</option><option>Suspense</option><option>Historical Fiction</option><option>Game Trailer</option><option>Game Advertisement</option><option>Promotional</option></select></label>
+    <label>Target duration<select name="duration"><option value="30">30 seconds</option><option value="45">45 seconds</option><option value="60" selected>60 seconds</option><option value="90">90 seconds</option></select></label>
+  </div>
+  <div class="form-note"><b>Local AI requirement</b><span>Script generation requires Ollama running on this computer with the configured model installed.</span></div>
+  <div class="form-actions"><a class="btn ghost" href="{{ url_for('dashboard') }}">Cancel</a><button class="btn primary" type="submit">Generate production plan ↗</button></div>
+</form>
+{% endblock %}

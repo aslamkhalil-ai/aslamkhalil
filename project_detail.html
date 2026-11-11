@@ -1,0 +1,460 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} · CineForge AI{% endblock %}
+{% block page_heading %}Production Workspace{% endblock %}
+
+{% block content %}
+
+<a class="back-link" href="{{ url_for('dashboard') }}">← Back to Project Library</a>
+
+<!-- Project Hero -->
+<section class="production-hero">
+
+    <div class="production-hero-content">
+        <div class="eyebrow">
+            <span class="welcome-dot"></span>
+            {{ project.genre }} PRODUCTION · {{ project.duration }} SECONDS
+        </div>
+
+        <h1>{{ project.title }}</h1>
+
+        <p>{{ project.idea }}</p>
+
+        <div class="production-meta">
+            <span class="production-status">{{ project.status }}</span>
+            <span>LOCAL PRODUCTION WORKSPACE</span>
+        </div>
+    </div>
+
+    <div class="production-hero-icon">✳</div>
+
+</section>
+
+<!-- Production Overview -->
+<section class="production-overview">
+
+    <div class="production-section-heading">
+        <div>
+            <div class="eyebrow">PROJECT CONTROL CENTER</div>
+            <h2>Production overview</h2>
+            <p class="muted">Track every stage of your video production.</p>
+        </div>
+    </div>
+
+    <div class="production-overview-grid">
+
+        <div class="panel production-timeline-panel">
+
+            <div class="panel-head">
+                <div>
+                    <h2>Production pipeline</h2>
+                    <p class="muted">Project workflow status</p>
+                </div>
+                <span class="panel-icon">◈</span>
+            </div>
+
+            <div class="timeline production-timeline">
+
+                {% for name in ['Creative brief', 'Story & script', 'Scene planning', 'Visual production', 'Voice & audio', 'Subtitles', 'Video rendering'] %}
+
+                <div class="timeline-item production-timeline-item">
+
+                    <span class="timeline-dot
+                        {% if loop.index == 1 or (loop.index == 2 and project.script) or (loop.index == 4 and project.visual_video_path) or (loop.index == 5 and project.voice_path) or (loop.index == 6 and project.subtitle_path) or (loop.index == 7 and project.final_video_path) %}done{% endif %}">
+                    </span>
+
+                    <div class="timeline-description">
+                        <b>{{ name }}</b>
+
+                        <small>
+                            {% if loop.index == 1 %}
+                                Saved
+                            {% elif loop.index == 2 and project.script %}
+                                Completed
+                            {% elif loop.index == 4 and project.visual_video_path %}
+                                Completed
+                            {% elif loop.index == 5 and project.voice_path %}
+                                Completed
+                            {% elif loop.index == 6 and project.subtitle_path %}
+                                Completed
+                            {% elif loop.index == 7 and project.final_video_path %}
+                                Completed
+                            {% else %}
+                                Pending
+                            {% endif %}
+                        </small>
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="panel project-brief-panel">
+
+            <div class="panel-head">
+                <div>
+                    <h2>Creative brief</h2>
+                    <p class="muted">Your original creative direction</p>
+                </div>
+                <span class="panel-icon">✧</span>
+            </div>
+
+            <div class="brief-description">
+                {{ project.idea }}
+            </div>
+
+            {% if project.error %}
+                <div class="alert warning">{{ project.error }}</div>
+            {% endif %}
+
+            <div class="brief-metrics">
+
+                <div>
+                    <small>GENRE</small>
+                    <b>{{ project.genre }}</b>
+                </div>
+
+                <div>
+                    <small>DURATION</small>
+                    <b>{{ project.duration }} sec</b>
+                </div>
+
+                <div>
+                    <small>STATUS</small>
+                    <b>{{ project.status }}</b>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% if project.script %}
+
+<!-- Script Studio -->
+<section class="panel production-module">
+
+    <div class="module-heading">
+        <div class="module-icon script-icon">✎</div>
+
+        <div class="module-title">
+            <div class="eyebrow">01 · CONTENT DEVELOPMENT</div>
+            <h2>Script Studio</h2>
+            <p class="muted">Your AI-generated narration and storytelling script.</p>
+        </div>
+
+        <span class="module-state completed-state">Available</span>
+    </div>
+
+    <div class="script-toolbar">
+        <span>GENERATED SCRIPT</span>
+
+        <button class="btn ghost small" onclick="copyText('script-text')">
+            Copy script
+        </button>
+    </div>
+
+    <pre id="script-text" class="script-text">{{ project.script }}</pre>
+
+</section>
+
+<!-- Voice Studio -->
+<section class="panel production-module voice-studio">
+
+    <div class="module-heading">
+        <div class="module-icon voice-icon">♫</div>
+
+        <div class="module-title">
+            <div class="eyebrow">02 · AUDIO PRODUCTION</div>
+            <h2>Voice Studio</h2>
+            <p class="muted">Convert your script into natural spoken narration.</p>
+        </div>
+
+        <span class="module-state {% if project.voice_path %}completed-state{% else %}pending-state{% endif %}">
+            {% if project.voice_path %}Generated{% else %}Pending{% endif %}
+        </span>
+    </div>
+
+    <div class="module-specs">
+
+        <div>
+            <small>VOICE ENGINE</small>
+            <b>Piper Text-to-Speech</b>
+        </div>
+
+        <div>
+            <small>VOICE MODEL</small>
+            <b>Lessac Medium · English US</b>
+        </div>
+
+        <div>
+            <small>OUTPUT FORMAT</small>
+            <b>WAV Audio</b>
+        </div>
+
+    </div>
+
+    {% if project.voice_path %}
+
+        <div class="generated-asset">
+
+            <div class="asset-success">
+                <span>✓</span>
+
+                <div>
+                    <b>Narration successfully generated</b>
+                    <small>Your audio file is ready for playback.</small>
+                </div>
+            </div>
+
+            <audio controls preload="metadata" class="voice-audio">
+                <source src="{{ url_for('play_project_voice', project_id=project.id) }}" type="audio/wav">
+                Your browser does not support audio playback.
+            </audio>
+
+        </div>
+
+    {% else %}
+
+        <div class="asset-placeholder">
+            <span class="placeholder-icon">♫</span>
+            <div>
+                <b>No narration available yet</b>
+                <p>Generate your project's voice track using the local Piper model.</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="module-actions">
+        <form method="POST" action="{{ url_for('generate_project_voice', project_id=project.id) }}">
+            <button type="submit" class="btn primary">
+                {% if project.voice_path %}Regenerate narration{% else %}Generate narration{% endif %}
+            </button>
+        </form>
+    </div>
+
+</section>
+
+<!-- Subtitle Studio -->
+<section class="panel production-module subtitle-studio">
+
+    <div class="module-heading">
+        <div class="module-icon subtitle-icon">CC</div>
+
+        <div class="module-title">
+            <div class="eyebrow">03 · TEXT SYNCHRONIZATION</div>
+            <h2>Subtitle Studio</h2>
+            <p class="muted">Create timed subtitles for your production.</p>
+        </div>
+
+        <span class="module-state {% if project.subtitle_path %}completed-state{% else %}pending-state{% endif %}">
+            {% if project.subtitle_path %}Generated{% else %}Pending{% endif %}
+        </span>
+    </div>
+
+    <div class="module-specs">
+
+        <div>
+            <small>SUBTITLE ENGINE</small>
+            <b>CineForge Subtitle Engine</b>
+        </div>
+
+        <div>
+            <small>FILE FORMAT</small>
+            <b>SubRip (.SRT)</b>
+        </div>
+
+        <div>
+            <small>TIMING</small>
+            <b>Speech-aligned timestamps</b>
+        </div>
+
+    </div>
+
+    {% if project.subtitle_path %}
+
+        <div class="generated-asset">
+
+            <div class="asset-success">
+                <span>✓</span>
+
+                <div>
+                    <b>Subtitle file generated</b>
+                    <small>Your SRT file is ready to download.</small>
+                </div>
+            </div>
+
+            <a class="btn ghost"
+               href="{{ url_for('download_project_subtitles', project_id=project.id) }}">
+                ↓ Download SRT file
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="asset-placeholder">
+            <span class="placeholder-icon">CC</span>
+            <div>
+                <b>No subtitles available yet</b>
+                <p>Generate subtitle timestamps from your project script.</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="module-actions">
+        <form method="POST" action="{{ url_for('generate_project_subtitles', project_id=project.id) }}">
+            <button type="submit" class="btn primary">
+                {% if project.subtitle_path %}Regenerate subtitles{% else %}Generate subtitles{% endif %}
+            </button>
+        </form>
+    </div>
+
+</section>
+
+<!-- Final Video Studio -->
+<section class="panel production-module final-video-studio">
+
+    <div class="module-heading">
+        <div class="module-icon final-icon">▶</div>
+
+        <div class="module-title">
+            <div class="eyebrow">04 · FINAL ASSEMBLY</div>
+            <h2>Final Video Studio</h2>
+            <p class="muted">Bring visuals, narration, background music and subtitles together.</p>
+        </div>
+
+        <span class="module-state {% if project.final_video_path %}completed-state{% else %}pending-state{% endif %}">
+            {% if project.final_video_path %}Rendered{% else %}Not rendered{% endif %}
+        </span>
+    </div>
+
+    <div class="module-specs">
+
+        <div>
+            <small>VISUAL PRODUCTION</small>
+            <b>Local Cinematic Storyboards</b>
+        </div>
+
+        <div>
+            <small>AUDIO MIXING</small>
+            <b>Narration + Background Music</b>
+        </div>
+
+        <div>
+            <small>VIDEO EXPORT</small>
+            <b>MP4 · 1280 × 720</b>
+        </div>
+
+    </div>
+
+    {% if project.final_video_path %}
+
+        <div class="generated-asset final-generated-asset">
+
+            <div class="asset-success">
+                <span>✓</span>
+
+                <div>
+                    <b>Final production rendered successfully</b>
+                    <small>Your completed video is available below.</small>
+                </div>
+            </div>
+
+            <video controls preload="metadata" class="final-video-player">
+                <source src="{{ url_for('play_project_final_video', project_id=project.id) }}" type="video/mp4">
+                Your browser does not support MP4 playback.
+            </video>
+
+            <a class="btn ghost final-download"
+               href="{{ url_for('download_project_final_video', project_id=project.id) }}">
+                ↓ Download final MP4
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="asset-placeholder final-placeholder">
+            <span class="placeholder-icon">▶</span>
+
+            <div>
+                <b>Your final video is waiting to be rendered</b>
+                <p>CineForge will assemble your scene visuals, narration, music and subtitles into one MP4 production.</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="render-action-area">
+
+        <form method="POST"
+              action="{{ url_for('generate_project_final_video', project_id=project.id) }}"
+              onsubmit="const button = this.querySelector('button'); button.disabled = true; button.textContent = 'Rendering video… Please wait';">
+
+            <button type="submit" class="btn primary final-render-button">
+                {% if project.final_video_path %}
+                    ↻ Regenerate final video
+                {% else %}
+                    ▶ Generate final video
+                {% endif %}
+            </button>
+
+        </form>
+
+        <p class="render-note">
+            Rendering can take several minutes on CPU. Keep this tab open until the process finishes.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- Scene Breakdown -->
+<section class="panel production-module">
+
+    <div class="module-heading">
+        <div class="module-icon scene-icon">▤</div>
+
+        <div class="module-title">
+            <div class="eyebrow">05 · VISUAL PLANNING</div>
+            <h2>Scene Breakdown</h2>
+            <p class="muted">Structured scene information and production direction.</p>
+        </div>
+
+        <span class="module-state completed-state">Project data</span>
+    </div>
+
+    <div class="script-toolbar">
+        <span>SCENE STRUCTURE · JSON</span>
+
+        <button class="btn ghost small" onclick="copyText('scene-text')">
+            Copy scene data
+        </button>
+    </div>
+
+    <pre id="scene-text" class="script-text">{{ project.scenes }}</pre>
+
+</section>
+
+{% else %}
+
+<div class="empty-state compact">
+    <div class="empty-icon">⚙</div>
+    <h2>Script generation needs attention</h2>
+    <p>Check that Ollama is installed, running, and has the selected model downloaded. Then create a new project to retry.</p>
+</div>
+
+{% endif %}
+
+{% endblock %}

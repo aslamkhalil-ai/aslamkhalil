@@ -1,0 +1,253 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard · CineForge AI{% endblock %}
+{% block page_heading %}Production Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Welcome Section -->
+<section class="dashboard-hero">
+
+    <div class="dashboard-welcome">
+        <div class="eyebrow">
+            <span class="welcome-dot"></span>
+            YOUR CREATIVE WORKSPACE
+        </div>
+
+        <h1>Bring your stories<br>to <span class="gradient-text">life.</span></h1>
+
+        <p class="muted">
+            Transform creative concepts into structured,
+            narrated and visually engaging video productions.
+        </p>
+
+        <div class="welcome-actions">
+            <a class="btn primary" href="{{ url_for('new_project') }}">
+                <span>＋</span> Create new project
+            </a>
+
+            <span class="workspace-note">
+                <span class="workspace-note-dot"></span>
+                Your local workspace is ready
+            </span>
+        </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+        <div class="visual-orbit orbit-one"></div>
+        <div class="visual-orbit orbit-two"></div>
+
+        <div class="visual-core">
+            <div class="core-inner">CF</div>
+        </div>
+
+        <div class="visual-chip chip-top">
+            <span>✦</span> AI STORY
+        </div>
+
+        <div class="visual-chip chip-bottom">
+            <span>▶</span> VIDEO STUDIO
+        </div>
+    </div>
+
+</section>
+
+<!-- Workspace Statistics -->
+<section class="dashboard-stats">
+
+    <div class="stat-card premium-stat">
+        <div class="stat-top">
+            <span class="stat-label">Total productions</span>
+            <span class="stat-icon">▦</span>
+        </div>
+
+        <strong>{{ projects|length }}</strong>
+
+        <small>Projects saved in your workspace</small>
+    </div>
+
+    <div class="stat-card premium-stat">
+        <div class="stat-top">
+            <span class="stat-label">Production engine</span>
+            <span class="stat-icon">⚙</span>
+        </div>
+
+        <strong class="stat-word">LOCAL</strong>
+
+        <small>Offline-first production workflow</small>
+    </div>
+
+    <div class="stat-card premium-stat">
+        <div class="stat-top">
+            <span class="stat-label">AI integration</span>
+            <span class="stat-icon">✧</span>
+        </div>
+
+        <strong class="stat-word">OLLAMA</strong>
+
+        <small>Local model integration</small>
+    </div>
+
+</section>
+
+<!-- Project Library -->
+<section class="library-section">
+
+    <div class="library-heading">
+
+        <div>
+            <div class="eyebrow">YOUR WORK</div>
+            <h2>Project Library</h2>
+            <p class="muted">
+                Manage and continue your creative productions.
+            </p>
+        </div>
+
+        <div class="library-count">
+            <span>{{ projects|length }}</span>
+            PROJECTS
+        </div>
+
+    </div>
+
+    {% if projects %}
+
+        <div class="project-grid premium-project-grid">
+
+            {% for p in projects %}
+
+                <a class="project-card premium-project-card"
+                   href="{{ url_for('project_detail', project_id=p.id) }}">
+
+                    <div class="project-art premium-project-art art-{{ loop.index0 % 4 }}">
+
+                        <div class="art-top-row">
+                            <span class="art-tag">{{ p.genre }}</span>
+                            <span class="art-open">↗</span>
+                        </div>
+
+                        <div class="art-center">
+                            <div class="art-play">▶</div>
+                            <span class="art-symbol">✳</span>
+                        </div>
+
+                        <div class="art-bottom-label">
+                            CINEFORGE PRODUCTION
+                        </div>
+
+                    </div>
+
+                    <div class="project-info premium-project-info">
+
+                        <div class="project-title">
+                            {{ p.title }}
+                        </div>
+
+                        <div class="project-meta">
+                            <span>{{ p.duration }} SEC</span>
+                            <span class="meta-divider">•</span>
+                            <span>{{ p.created_at }}</span>
+                        </div>
+
+                        <div class="card-bottom">
+
+                            <span class="status premium-status">
+                                <span class="status-dot"></span>
+                                {{ p.status }}
+                            </span>
+
+                            <span class="project-open-label">
+                                Open project <span>→</span>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state premium-empty-state">
+
+            <div class="empty-illustration">
+                <div class="empty-illustration-inner">
+                    ✳
+                </div>
+            </div>
+
+            <div class="eyebrow">NOTHING HERE YET</div>
+
+            <h2>Your first production awaits.</h2>
+
+            <p>
+                Start with an idea. CineForge will help structure
+                your story and turn it into a complete video production.
+            </p>
+
+            <a class="btn primary"
+               href="{{ url_for('new_project') }}">
+                ＋ Create your first project
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+<!-- Production Capabilities -->
+<section class="capabilities-section">
+
+    <div class="capabilities-heading">
+        <div class="eyebrow">BUILT FOR CREATORS</div>
+        <h2>Production pipeline</h2>
+        <p class="muted">
+            An integrated workflow for bringing stories to life.
+        </p>
+    </div>
+
+    <div class="capabilities-grid">
+
+        <div class="capability-card">
+            <span class="capability-icon">✧</span>
+            <div>
+                <b>AI Storytelling</b>
+                <small>Structure creative concepts into stories.</small>
+            </div>
+        </div>
+
+        <div class="capability-card">
+            <span class="capability-icon">▤</span>
+            <div>
+                <b>Visual Storyboards</b>
+                <small>Organize scenes into visual sequences.</small>
+            </div>
+        </div>
+
+        <div class="capability-card">
+            <span class="capability-icon">♫</span>
+            <div>
+                <b>Voice & Subtitles</b>
+                <small>Generate narration and subtitle tracks.</small>
+            </div>
+        </div>
+
+        <div class="capability-card">
+            <span class="capability-icon">▶</span>
+            <div>
+                <b>Final Video</b>
+                <small>Combine production assets into video.</small>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
